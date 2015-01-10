@@ -4,25 +4,22 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 
-import javax.swing.*;
-import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    public Label labelPath;
-    public Label labelSinc;
-    public Button btPasta;
-    public Button btLog;
+    private Main mainApp;
+
     SimpleFTP ftp = new SimpleFTP();
 
     @FXML
@@ -31,6 +28,10 @@ public class Controller implements Initializable {
     public PasswordField campoPassword;
     public Label statusLogin;
     public Button btLogar;
+    public Label labelPath;
+    public Label labelSinc;
+    public Button btPasta;
+    public Button btLog;
 
     @FXML
     public void doLogin(ActionEvent actionEvent) throws IOException {
@@ -52,9 +53,24 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
+    public void doPromptPath(ActionEvent actionEvent) throws IOException {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(mainApp.getPrimaryStage());
+        if(selectedDirectory == null){
+            labelPath.setText("No Directory selected");
+        }else{
+            labelPath.setText(selectedDirectory.getAbsolutePath());
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btPasta.setDisable(true);
         btLog.setDisable(true);
+    }
+
+    public void setMainApp(Main mainApp) {
+        this.mainApp = mainApp;
     }
 }
