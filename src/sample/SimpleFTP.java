@@ -31,9 +31,6 @@ public class SimpleFTP {
      * password.
      */
     public synchronized String connect(String host, String login, String senha) throws IOException {
-        if (socket != null) {
-            throw new IOException("Already connected. Disconnect first.");
-        }
         socket = new Socket(host, 21);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new BufferedWriter(
@@ -43,7 +40,7 @@ public class SimpleFTP {
         user(login);
         if(pass(senha).startsWith("530")) return "Login/Senha Errado";
 
-        return "Now logged in";
+        return "Logado!";
     }
 
     /*************************

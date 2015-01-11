@@ -4,12 +4,10 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import org.controlsfx.dialog.Dialogs;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,23 +32,43 @@ public class Controller implements Initializable {
     public Button btLog;
 
     @FXML
+    public TableView<FileFTP> fileTable;
+
+    @FXML
+    public TableColumn nomeColumn;
+
+    @FXML
+    public TableColumn tamanhoColumn;
+
+    @FXML
+    public TableColumn nomeAlteradoColumn;
+
+    @FXML
+    public TableColumn ultimaAltColumn;
+
+    @FXML
     public void doLogin(ActionEvent actionEvent) throws IOException {
         if(!(campoServidor.getText().isEmpty() || campoLogin.getText().isEmpty() || campoPassword.getText().isEmpty())){
             String response = ftp.connect(campoServidor.getText(),campoLogin.getText(),campoPassword.getText());
-            statusLogin.setText(response);
             System.out.println(response);
-            if(response.startsWith("Now")) {
-                statusLogin.setTextFill(Color.web("#7df28b"));
-                campoServidor.setDisable(true);
-                campoLogin.setDisable(true);
-                campoPassword.setDisable(true);
-                btLogar.setDisable(true);
-                btPasta.setDisable(false);
-                btLog.setDisable(false);
+            if(response.startsWith("Logado!")) {
+                travarTudo(response);
+
             }else{
-                statusLogin.setTextFill(Color.RED);
+                Dialogs.create().owner(mainApp.getPrimaryStage()).title("Erro").message(response).showError();
             }
         }
+    }
+
+    private void travarTudo(String response) {
+        statusLogin.setText(response);
+        statusLogin.setTextFill(Color.web("#7df28b"));
+        campoServidor.setDisable(true);
+        campoLogin.setDisable(true);
+        campoPassword.setDisable(true);
+        btLogar.setDisable(true);
+        btPasta.setDisable(false);
+        btLog.setDisable(false);
     }
 
     @FXML
@@ -66,11 +84,18 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        /*
+        nomeColumn.setCellValueFactory(cellData -> cellData.getValue().);
+        tamanhoColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        nomeAlteradoColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        ultimaAltColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        */
         btPasta.setDisable(true);
         btLog.setDisable(true);
     }
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
+        fileTable.setItems(mainApp.getFileData());
     }
 }

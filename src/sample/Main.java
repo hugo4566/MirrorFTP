@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -18,10 +20,15 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
 
+    private ObservableList<FileFTP> fileData = FXCollections.observableArrayList();
+
+    public Main(){
+        fileData.add(new FileFTP(1,"hugo",100,"nunca"));
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("AddressApp");
 
         initRootLayout();
     }
@@ -48,6 +55,10 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<FileFTP> getFileData() {
+        return fileData;
     }
 
     public Stage getPrimaryStage() {

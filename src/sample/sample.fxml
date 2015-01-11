@@ -46,12 +46,12 @@
       </AnchorPane>
    </top>
    <center>
-      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="fileTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn prefWidth="75.0" text="Nome" />
-          <TableColumn prefWidth="75.0" text="Tamanho" />
-            <TableColumn prefWidth="75.0" text="Alterado/Criado Por" />
-            <TableColumn prefWidth="75.0" text="Ultima Alteração" />
+          <TableColumn fx:id="nomeColumn" prefWidth="75.0" text="Nome" />
+          <TableColumn fx:id="tamanhoColumn" prefWidth="75.0" text="Tamanho" />
+            <TableColumn fx:id="nomeAlteradoColumn" prefWidth="75.0" text="Alterado/Criado Por" />
+            <TableColumn fx:id="ultimaAltColumn" prefWidth="75.0" text="Ultima Alteração" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
