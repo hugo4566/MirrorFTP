@@ -9,6 +9,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
 import javafx.util.Callback;
 import org.controlsfx.dialog.Dialogs;
 
@@ -154,8 +156,8 @@ public class Controller implements Initializable {
                     event.consume();
                 }
 
-                if (event.getButton() == MouseButton.PRIMARY) {
-
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    System.out.println("OLa");
                 }
             });
 
