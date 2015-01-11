@@ -22,9 +22,7 @@ public class Main extends Application {
 
     private ObservableList<FileFTP> fileData = FXCollections.observableArrayList();
 
-    public Main(){
-        fileData.add(new FileFTP(1,"hugo",100,"nunca"));
-    }
+    public Main(){}
 
     @Override
     public void start(Stage primaryStage) throws Exception {

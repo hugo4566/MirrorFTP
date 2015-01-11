@@ -10,24 +10,27 @@ import javafx.beans.property.StringProperty;
  */
 public class FileFTP {
 
-    private IntegerProperty tipo;
+    private SimpleStringProperty tipo;
     private StringProperty nome;
-    private IntegerProperty tamanho;
+    private SimpleStringProperty tamanho;
+    private StringProperty nomeModificador;
     private StringProperty modificado;
 
     public FileFTP(String response) {
         String[] partes = response.split("\\s+");
-        this.tipo = new SimpleIntegerProperty(Integer.valueOf(partes[1]));
+        this.tipo = new SimpleStringProperty(partes[1]);
         this.nome = new SimpleStringProperty(partes[8]);
-        this.tamanho = new SimpleIntegerProperty(Integer.valueOf(partes[4]));
+        this.tamanho = new SimpleStringProperty(partes[4]);
+        this.nomeModificador = new SimpleStringProperty(partes[2]);
         this.modificado = new SimpleStringProperty(partes[5]+" "+partes[6]+" "+partes[7]);
     }
 
 
-    public FileFTP(int tipo, String nome, int tamanho, String modificado) {
-        this.tipo = new SimpleIntegerProperty(tipo);
+    public FileFTP(String tipo, String nome, String tamanho,String nomeModificador, String modificado) {
+        this.tipo = new SimpleStringProperty(tipo);
         this.nome = new SimpleStringProperty(nome);
-        this.tamanho = new SimpleIntegerProperty(tamanho);
+        this.tamanho = new SimpleStringProperty(tamanho);
+        this.nomeModificador = new SimpleStringProperty(nomeModificador);
         this.modificado = new SimpleStringProperty(modificado);
     }
 
@@ -40,16 +43,40 @@ public class FileFTP {
     }
     */
 
-    public int getTipo() {
+    public String getNomeModificador() {
+        return nomeModificador.get();
+    }
+
+    public StringProperty nomeModificadorProperty() {
+        return nomeModificador;
+    }
+
+    public void setNomeModificador(String nomeModificador) {
+        this.nomeModificador.set(nomeModificador);
+    }
+
+    public String getTipo() {
         return tipo.get();
     }
 
-    public IntegerProperty tipoProperty() {
+    public SimpleStringProperty tipoProperty() {
         return tipo;
     }
 
-    public void setTipo(int tipo) {
+    public void setTipo(String tipo) {
         this.tipo.set(tipo);
+    }
+
+    public String getTamanho() {
+        return tamanho.get();
+    }
+
+    public SimpleStringProperty tamanhoProperty() {
+        return tamanho;
+    }
+
+    public void setTamanho(String tamanho) {
+        this.tamanho.set(tamanho);
     }
 
     public String getNome() {
@@ -62,18 +89,6 @@ public class FileFTP {
 
     public void setNome(String nome) {
         this.nome.set(nome);
-    }
-
-    public int getTamanho() {
-        return tamanho.get();
-    }
-
-    public IntegerProperty tamanhoProperty() {
-        return tamanho;
-    }
-
-    public void setTamanho(int tamanho) {
-        this.tamanho.set(tamanho);
     }
 
     public String getModificado() {

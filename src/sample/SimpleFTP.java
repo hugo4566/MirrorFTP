@@ -19,6 +19,8 @@ import java.util.StringTokenizer;
  */
 public class SimpleFTP {
 
+    private String ultimoList = "";
+
     /**
      * Create an instance of FTP.SimpleFTP.
      */
@@ -87,12 +89,14 @@ public class SimpleFTP {
         return response();
     }
 
-    public synchronized String list() throws IOException {
+    public synchronized String list(String path) throws IOException {
         sendLine("PASV");
         ConexaoDados conexaoDados = new ConexaoDados(response()).invoke();
         Socket dataSocket = new Socket(conexaoDados.getIp(), conexaoDados.getPort());
 
-        sendLine("LIST");
+        ultimoList = path;
+
+        sendLine("LIST "+path);
         response();
 
         StringBuilder output = new StringBuilder();
@@ -107,7 +111,6 @@ public class SimpleFTP {
         input.close();
         response();
 
-        System.out.println(output.toString());
         return output.toString();
     }
 
@@ -343,6 +346,14 @@ public class SimpleFTP {
             }
             return this;
         }
+    }
+
+    public String getUltimoList() {
+        return ultimoList;
+    }
+
+    public void setUltimoList(String ultimoList) {
+        this.ultimoList = ultimoList;
     }
 }
 

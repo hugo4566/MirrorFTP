@@ -1,6 +1,5 @@
 package sample;
 
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +11,8 @@ import org.controlsfx.dialog.Dialogs;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -22,13 +23,29 @@ public class Controller implements Initializable {
 
     @FXML
     public TextField campoServidor;
+
+    @FXML
     public TextField campoLogin;
+
+    @FXML
     public PasswordField campoPassword;
+
+    @FXML
     public Label statusLogin;
+
+    @FXML
     public Button btLogar;
+
+    @FXML
     public Label labelPath;
+
+    @FXML
     public Label labelSinc;
+
+    @FXML
     public Button btPasta;
+
+    @FXML
     public Button btLog;
 
     @FXML
@@ -53,11 +70,23 @@ public class Controller implements Initializable {
             System.out.println(response);
             if(response.startsWith("Logado!")) {
                 travarTudo(response);
-
+                String responseList = ftp.list("/");
+                mainApp.getFileData().addAll(destrinchaLista(responseList));
             }else{
                 Dialogs.create().owner(mainApp.getPrimaryStage()).title("Erro").message(response).showError();
             }
         }
+    }
+
+    private Collection<FileFTP> destrinchaLista(String responseList) throws IOException {
+        Collection<FileFTP> listaFileFTPs = new ArrayList<FileFTP>();
+        String[] listaArquivos = responseList.split("\\r\\n");
+        for (int i = 0; i < listaArquivos.length; i++) {
+            FileFTP fileFTP = new FileFTP(listaArquivos[i]);
+            listaFileFTPs.add(fileFTP);
+        }
+        mainApp.getFileData().clear();
+        return listaFileFTPs;
     }
 
     private void travarTudo(String response) {
@@ -84,12 +113,15 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*
-        nomeColumn.setCellValueFactory(cellData -> cellData.getValue().);
-        tamanhoColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-        nomeAlteradoColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-        ultimaAltColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-        */
+
+        nomeColumn.setCellValueFactory(p -> ((TableColumn.CellDataFeatures<FileFTP, String>) p).getValue().nomeProperty());
+
+        tamanhoColumn.setCellValueFactory(p -> ((TableColumn.CellDataFeatures<FileFTP, String>) p).getValue().tamanhoProperty());
+
+        nomeAlteradoColumn.setCellValueFactory(p -> ((TableColumn.CellDataFeatures<FileFTP, String>) p).getValue().nomeModificadorProperty());
+
+        ultimaAltColumn.setCellValueFactory(p -> ((TableColumn.CellDataFeatures<FileFTP, String>) p).getValue().modificadoProperty());
+
         btPasta.setDisable(true);
         btLog.setDisable(true);
     }
