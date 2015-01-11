@@ -19,7 +19,9 @@ import java.util.StringTokenizer;
  */
 public class SimpleFTP {
 
-    private String ultimoList = "";
+    private String ultimoList = "/";
+
+    private String atualList = "/";
 
     /**
      * Create an instance of FTP.SimpleFTP.
@@ -94,7 +96,8 @@ public class SimpleFTP {
         ConexaoDados conexaoDados = new ConexaoDados(response()).invoke();
         Socket dataSocket = new Socket(conexaoDados.getIp(), conexaoDados.getPort());
 
-        ultimoList = path;
+        ultimoList = atualList;
+        atualList = path;
 
         sendLine("LIST "+path);
         response();
@@ -346,6 +349,14 @@ public class SimpleFTP {
             }
             return this;
         }
+    }
+
+    public String getAtualList() {
+        return atualList;
+    }
+
+    public void setAtualList(String atualList) {
+        this.atualList = atualList;
     }
 
     public String getUltimoList() {

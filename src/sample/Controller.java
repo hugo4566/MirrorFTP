@@ -1,11 +1,15 @@
 package sample;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Callback;
 import org.controlsfx.dialog.Dialogs;
 
 import java.io.File;
@@ -86,6 +90,9 @@ public class Controller implements Initializable {
             listaFileFTPs.add(fileFTP);
         }
         mainApp.getFileData().clear();
+        if(!ftp.getAtualList().equals("/")){
+            mainApp.getFileData().add(new FileFTP("","...","","",""));
+        }
         return listaFileFTPs;
     }
 
@@ -122,8 +129,39 @@ public class Controller implements Initializable {
 
         ultimaAltColumn.setCellValueFactory(p -> ((TableColumn.CellDataFeatures<FileFTP, String>) p).getValue().modificadoProperty());
 
+        fileTable.setRowFactory(getRowAction());
+
         btPasta.setDisable(true);
         btLog.setDisable(true);
+    }
+
+    private Callback<TableView<FileFTP>, TableRow<FileFTP>> getRowAction() {
+        return param -> {
+            final TableRow<FileFTP> row = new TableRow<>();
+            row.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                if (event.getButton() == MouseButton.MIDDLE) {
+                    try {
+                        if(row.getItem().getNome().equals("...")){
+                            String responseList = ftp.list(ftp.getUltimoList());
+                            mainApp.getFileData().addAll(destrinchaLista(responseList));
+                        }else if(row.getItem().getTipo().equals("3")){
+                            String responseList = ftp.list("/"+row.getItem().getNome());
+                            mainApp.getFileData().addAll(destrinchaLista(responseList));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    event.consume();
+                }
+
+                if (event.getButton() == MouseButton.PRIMARY) {
+
+                }
+            });
+
+
+            return row;
+    };
     }
 
     public void setMainApp(Main mainApp) {
