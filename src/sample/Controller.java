@@ -7,11 +7,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.dialog.Dialogs;
 
 import java.io.File;
@@ -150,20 +153,55 @@ public class Controller implements Initializable {
                             String responseList = ftp.list("/"+row.getItem().getNome());
                             mainApp.getFileData().addAll(destrinchaLista(responseList));
                         }
-                    } catch (IOException e) {
+                    }catch (IOException e) {
                         e.printStackTrace();
                     }
                     event.consume();
                 }
 
                 if (event.getButton() == MouseButton.SECONDARY) {
-                    System.out.println("OLa");
+                    showPopupMessage(mainApp.getPrimaryStage(),event,row.getItem());
                 }
             });
 
-
             return row;
     };
+    }
+
+    public static Popup createPopup(FileFTP item) {
+        final Popup popup = new Popup();
+        popup.setAutoFix(true);
+        popup.setAutoHide(true);
+        popup.setHideOnEscape(true);
+        VBox box = new VBox(5);
+        box.getStylesheets().add("/sample/css/styles.css");
+        box.getStyleClass().add("vboxPop");
+
+        Button btBaixar = new Button("Download");
+        btBaixar.setOnAction(e -> System.out.println("Download "+item.getNome()));
+        btBaixar.getStylesheets().add("/sample/css/styles.css");
+        btBaixar.getStyleClass().add("popup");
+
+        Button btDel = new Button("Deletar");
+        btDel.setOnAction(e -> System.out.println("Deletar"));
+        btDel.getStylesheets().add("/sample/css/styles.css");
+        btDel.getStyleClass().add("popup");
+
+        box.getChildren().add(btBaixar);
+        box.getChildren().add(new Separator());
+        box.getChildren().add(btDel);
+        box.setSpacing(0);
+        popup.getContent().add(box);
+        return popup;
+    }
+
+    public static void showPopupMessage(final Stage stage, MouseEvent event, FileFTP item) {
+        final Popup popup = createPopup(item);
+        popup.setOnShown(e -> {
+            popup.setX(event.getX() + stage.getX()+50);
+            popup.setY(event.getY() + stage.getY());
+        });
+        popup.show(stage);
     }
 
     public void setMainApp(Main mainApp) {
